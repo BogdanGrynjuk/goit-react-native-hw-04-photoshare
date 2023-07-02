@@ -30,7 +30,7 @@ export default function LoginScreen() {
     setEmail('');
     setPassword('');
     Keyboard.dismiss();
-    navigation.navigate("Home");
+    navigation.navigate("Home", {email: email, password: password});
   }
   
   return (

@@ -5,8 +5,7 @@ import {
   StyleSheet,
   View,
   Text,
-  ImageBackground,
-  Image,
+  ImageBackground,  
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -14,6 +13,8 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback
 } from "react-native";
+
+import { Feather } from '@expo/vector-icons';
 
 export default function RegistrationScreen() {
 
@@ -58,9 +59,8 @@ export default function RegistrationScreen() {
                   style={styles.avatarBtn}
                   activeOpacity={0.8}
                 >
-                  <Image source={require("../assets/images/icon-add.png")}
-                  >
-                  </Image>
+                  <Feather name="plus-circle" size={25} color="#FF6C00"/>
+                  
                 </TouchableOpacity>
               </View>
            
@@ -191,21 +191,14 @@ const styles = StyleSheet.create({
 
   avatarBtn: {
     position: "absolute",
-    display: "flex",
-    justifyContent: "center",
-    alignContent: "center",
-    alignItems: "center",
     bottom: 0,
     right: 0,
     width: 25,
     height: 25,
     marginBottom: 12.5,
     marginRight: -12.5,
-    color: "#FF6C00",
-    backgroundColor: "#ffffff",
-    borderWidth: 1,
-    borderColor: "#FF6C00",
-    borderRadius: 15,    
+    borderRadius: 16,
+    backgroundColor: "#FFFFFF",  
   },
 
   formTitle: {
