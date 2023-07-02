@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 
 import {
   StyleSheet,
@@ -22,11 +23,14 @@ export default function LoginScreen() {
   const [isFocusedPassword, setIsFocusedPassword] = useState(false);
   const [isVisiblePassword, setIsVisiblePassword] = useState(false);
 
+  const navigation = useNavigation();
+
   const onSubmit = () => {
     console.log(`email: ${email}, password: ${password}`);
     setEmail('');
     setPassword('');
     Keyboard.dismiss();
+    navigation.navigate("Home");
   }
   
   return (
@@ -103,6 +107,7 @@ export default function LoginScreen() {
                 <TouchableOpacity
                   style={styles.link}
                   activeOpacity={0.8}
+                  onPress={() => navigation.navigate("Register")}
                 >
                   <Text style={styles.linkText}>
                     Немає акаунту? Зареєструватися

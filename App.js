@@ -1,8 +1,15 @@
+import 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useFonts } from 'expo-font';
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+
 import RegistrationScreen from './Screens/RegistrationScreen';
 import LoginScreen from './Screens/LoginScreen';
+import Home from './Screens/HomeScreen';
+
+const MainStack = createStackNavigator();
 
 export default function App() {
 
@@ -17,8 +24,13 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      {/* <RegistrationScreen /> */}
-      <LoginScreen />
+      <NavigationContainer>
+        <MainStack.Navigator initialRouteName='Login' screenOptions={{headerShown: false}}>
+          <MainStack.Screen name='Login' component={LoginScreen}/>
+          <MainStack.Screen name='Register' component={RegistrationScreen}/>
+          <MainStack.Screen name='Home' component={Home}/>
+        </MainStack.Navigator>
+      </NavigationContainer>
       <StatusBar style="auto" />
     </View>
   );
