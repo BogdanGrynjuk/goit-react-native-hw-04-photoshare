@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native";
@@ -9,14 +9,16 @@ import PostsScreen from "./Tabs/PostsScreen";
 import ProfileScreen from "./Tabs/ProfileScreen";
 import CreatePostsScreen from "./Tabs/CreatePostsScreen";
 
-
 const Tabs = createBottomTabNavigator();
 
 export default function Home() {
+
+  const [isChangedIcon, setIsChangedIcon] = useState(false);
   const navigation = useNavigation();
 
   return (
     <Tabs.Navigator
+      initialRouteName="Posts"
       screenOptions={{
         tabBarShowLabel: false,
         tabBarStyle: {
@@ -56,12 +58,16 @@ export default function Home() {
               <Feather name="log-out" size={30} color="#BDBDBD" />
             </TouchableOpacity>
           ),
-          tabBarIcon: ({ focused, size, color }) => <Feather name="grid" size={size} color="#BDBDBD" />,
-          tabBarItemStyle: {
-            marginHorizontal: 30,
-          },
-          tabBarActiveTintColor: '#BDBDBD',
-          tabBarInactiveTintColor: '#BDBDBD'
+          tabBarButton: (props) =>
+            <TouchableOpacity
+              {...props}
+              activeOpacity={0.8}
+              onPress={() => {
+                setIsChangedIcon(false);
+                navigation.navigate("Posts");
+              }}
+            />,
+          tabBarIcon: ({ focused, size, color }) => <Feather name="grid" size={size} color="#BDBDBD" />,         
         }}
       />
       <Tabs.Screen
@@ -82,15 +88,33 @@ export default function Home() {
               activeOpacity={0.8}
               onPress={() => navigation.navigate("Posts")}
             >
-              <Feather name="arrow-left" size={30} color="#BDBDBD" />              
+              <Feather name="arrow-left" size={30} color="#BDBDBD" />
             </TouchableOpacity>
-          ),          
-          tabBarIcon: ({ focused, size, color }) => <Feather name="plus" size={size} color="#FFFFFF" />,          
-          tabBarItemStyle: {
-            backgroundColor: '#FF6C00',
-            marginHorizontal: 30,
-            borderRadius: 50
-          },
+          ),
+          tabBarStyle: { display: 'none' },
+          tabBarButton: (props) =>
+            <TouchableOpacity
+              {...props}
+              style={{
+                backgroundColor: '#FF6C00',
+                width: 70,
+                height: 40,
+                borderRadius: 50
+              }}
+              activeOpacity={0.8}
+              onPress={() => {
+                isChangedIcon 
+                  ? navigation.navigate("Profile")
+                  : navigation.navigate("CreatePosts")              
+              }}
+            />,
+          tabBarIcon: ({ focused, size, color }) => {
+            return (
+              isChangedIcon
+                ? <Feather name="user" size={size} color="#FFFFFF" />              
+                : <Feather name="plus" size={size} color="#FFFFFF" />
+            )
+          },          
         }}
       />
       <Tabs.Screen
@@ -98,12 +122,27 @@ export default function Home() {
         component={ProfileScreen}
         options={{
           headerShown: false,
-          tabBarIcon: ({ focused, size, color }) => <Feather name="user" size={size} color="#BDBDBD" />,
-          tabBarItemStyle: {
-            marginHorizontal: 30,
+          tabBarButton: (props) =>
+            <TouchableOpacity
+              {...props}
+              activeOpacity={0.8}
+              onPress={() => {
+                if (isChangedIcon) {
+                  navigation.navigate("CreatePosts");
+                  setIsChangedIcon(false);
+                } else {
+                  setIsChangedIcon(true);
+                  navigation.navigate("Profile");
+                }  
+              }}
+            />,
+          tabBarIcon: ({ focused, size, color }) => {
+            return (
+              isChangedIcon
+              ? <Feather name="plus" size={size} color="#BDBDBD" />
+              : <Feather name="user" size={size} color="#BDBDBD" />
+            );
           },
-          tabBarActiveTintColor: '#BDBDBD',
-          tabBarInactiveTintColor: '#BDBDBD',
         }}
       />
     </Tabs.Navigator>
