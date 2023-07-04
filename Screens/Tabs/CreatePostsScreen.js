@@ -15,6 +15,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 
 export default function CreatePostsScreen({ }) {
+  
   const [label, setLabel] = useState("");
   const [place, setPlace] = useState("");
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
@@ -73,7 +74,8 @@ export default function CreatePostsScreen({ }) {
                 onFocus={() => {
                   setIsShowKeyboard(true);
                 }}
-                onChangeText={(value) => setLabel(value)}
+                onBlur={() => setIsShowKeyboard(false)}
+                onChangeText={setLabel}
               />
             </View>
             {/* input place */}
@@ -92,7 +94,8 @@ export default function CreatePostsScreen({ }) {
                 onFocus={() => {
                   setIsShowKeyboard(true);
                 }}
-                onChangeText={value => setPlace(value)}
+                onBlur={() => setIsShowKeyboard(false)}
+                onChangeText={setPlace}
               />
             </View>
             {/* btn Submit */}

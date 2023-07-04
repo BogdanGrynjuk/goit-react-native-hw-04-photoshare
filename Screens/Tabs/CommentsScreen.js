@@ -4,7 +4,7 @@ import { View, Text, StyleSheet } from "react-native";
 export default function CommentsScreen() {
   return (
     <View style={styles.container}>
-      <Text>PostsScreen</Text>
+      <Text>CommentsScreen</Text>
     </View>
     
   )

@@ -55,7 +55,7 @@ export default function Home() {
               activeOpacity={0.8}
               onPress={() => navigation.navigate("Login")}
             >
-              <Feather name="log-out" size={30} color="#BDBDBD" />
+              <Feather name="log-out" size={25} color="#BDBDBD" />
             </TouchableOpacity>
           ),
           tabBarButton: (props) =>

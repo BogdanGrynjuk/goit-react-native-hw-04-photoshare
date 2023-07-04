@@ -10,6 +10,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   TextInput,
+  TouchableHighlight,
   TouchableOpacity,
   TouchableWithoutFeedback
 } from "react-native";
@@ -22,6 +23,7 @@ export default function RegistrationScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isFocusedLogin, setIsFocusedLogin] = useState(false);
   const [isFocusedEmail, setIsFocusedEmail] = useState(false);
   const [isFocusedPassword, setIsFocusedPassword] = useState(false);
@@ -29,17 +31,22 @@ export default function RegistrationScreen() {
 
   const navigation = useNavigation();
 
+  const keyboardHide = () => {
+    setIsShowKeyboard(false);
+    Keyboard.dismiss();
+  };
+  
   const onSubmit = () => {
     console.log(`login: ${login}, email: ${email}, password: ${password}`);
     setLogin("")
     setEmail("");
     setPassword("");
-    Keyboard.dismiss();
+    keyboardHide();
     navigation.navigate("Home");
   };
   
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <TouchableWithoutFeedback onPress={keyboardHide}>
       
       <View style={styles.container}>
         {/* background */}
@@ -50,25 +57,24 @@ export default function RegistrationScreen() {
           
           <View style={styles.wrapper}>
 
-            <KeyboardAvoidingView
-              behavior={Platform.OS == "ios" ? "padding" : "height"}
-            >
-
-              <View style={styles.avatar}>
-                <TouchableOpacity
-                  style={styles.avatarBtn}
-                  activeOpacity={0.8}
-                >
-                  <Feather name="plus-circle" size={25} color="#FF6C00"/>
-                  
-                </TouchableOpacity>
-              </View>
+            <View style={styles.avatar}>
+              <TouchableHighlight
+                style={styles.avatarBtn}
+                activeOpacity={0.8}
+                underlayColor="#ffffff"
+              >
+                <Feather name="plus-circle" size={25} color="#FF6C00" />
+              </TouchableHighlight>
+            </View>
            
-              <View>
-                <Text style={styles.formTitle}>Реєстрація</Text>
-              </View>
-              {/* form */}
-              <View style={styles.form}>
+            <View>
+              <Text style={styles.formTitle}>Реєстрація</Text>
+            </View>
+            {/* form */}
+            <View style={styles.form}>
+              <KeyboardAvoidingView
+                behavior={Platform.OS == "ios" ? "padding" : 0}
+              >
                 {/* input login */}
                 <View>
                   <TextInput
@@ -79,8 +85,14 @@ export default function RegistrationScreen() {
                       color: "#212121",
                     }}
                     placeholder='Логін'
-                    onFocus={() => { setIsFocusedLogin(true) }}
-                    onBlur={() => setIsFocusedLogin(false)}
+                    onFocus={() => {
+                      setIsFocusedLogin(true);
+                      setIsShowKeyboard(true);
+                    }}
+                    onBlur={() => {
+                      setIsFocusedLogin(false);
+                      setIsShowKeyboard(false);
+                    }}
                     value={login}
                     onChangeText={setLogin}
                   />
@@ -95,8 +107,14 @@ export default function RegistrationScreen() {
                       color: "#212121",
                     }}
                     placeholder="Адреса електронної пошти"
-                    onFocus={() => setIsFocusedEmail(true)}
-                    onBlur={() => setIsFocusedEmail(false)}
+                    onFocus={() => {
+                      setIsFocusedEmail(true);
+                      setIsShowKeyboard(true);
+                    }}
+                    onBlur={() => {
+                      setIsFocusedEmail(false);
+                      setIsShowKeyboard(false);
+                    }}
                     value={email}
                     onChangeText={setEmail}
                   />
@@ -112,8 +130,14 @@ export default function RegistrationScreen() {
                     }}
                     placeholder='Пароль'
                     secureTextEntry={!isVisiblePassword}
-                    onFocus={() => setIsFocusedPassword(true)}
-                    onBlur={() => setIsFocusedPassword(false)}
+                    onFocus={() => {
+                      setIsFocusedPassword(true);
+                      setIsShowKeyboard(true);
+                    }}
+                    onBlur={() => {
+                      setIsFocusedPassword(false);
+                      setIsShowKeyboard(false);
+                    }}
                     value={password}
                     onChangeText={setPassword}
                   />
@@ -126,27 +150,32 @@ export default function RegistrationScreen() {
                     <Text style={styles.btnToggleText}>Показати</Text>
                   </TouchableOpacity>
                 </View>
-                {/* btn sign up */}
-                <TouchableOpacity
-                  style={styles.btn}
-                  activeOpacity={0.8}
-                  onPress={onSubmit}
-                >
-                  <Text style={styles.btnTitle}>Зареєструватись</Text>
-                </TouchableOpacity>
-                {/* link */}
-                <TouchableOpacity
-                  style={styles.link}
-                  activeOpacity={0.8}
-                  onPress = {() => navigation.navigate("Login")}
-                >
-                  <Text style={styles.linkText}>
-                    Вже є акаунт? Увійти
-                  </Text>
-                </TouchableOpacity>
-              </View>
 
-            </KeyboardAvoidingView>
+              </KeyboardAvoidingView>
+              {!isShowKeyboard
+                ? <View>
+                  {/* btn sign up */}
+                  <TouchableOpacity
+                    style={styles.btn}
+                    activeOpacity={0.8}
+                    onPress={onSubmit}
+                  >
+                    <Text style={styles.btnTitle}>Зареєструватись</Text>
+                  </TouchableOpacity>
+                  {/* link */}
+                  <TouchableOpacity
+                    style={styles.link}
+                    activeOpacity={0.8}
+                    onPress={() => navigation.navigate("Login")}
+                  >
+                    <Text style={styles.linkText}>
+                      Вже є акаунт? Увійти
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                : null
+              }
+            </View>
 
           </View>
         
@@ -154,7 +183,7 @@ export default function RegistrationScreen() {
 
       </View>
 
-    </TouchableWithoutFeedback>  
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -178,7 +207,7 @@ const styles = StyleSheet.create({
   },
 
   avatar: {
-    position: "absolute",
+    position: "relative",
     top: 0,
     left: '50%',
     width: 120,
@@ -202,7 +231,7 @@ const styles = StyleSheet.create({
   },
 
   formTitle: {
-    marginTop: 92,
+    marginTop: 32,
     marginBottom: 33,
     fontSize: 30,
     fontFamily: "Roboto-Medium",

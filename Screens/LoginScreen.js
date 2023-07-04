@@ -19,22 +19,28 @@ export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   
+  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isFocusedEmail, setIsFocusedEmail] = useState(false);
   const [isFocusedPassword, setIsFocusedPassword] = useState(false);
   const [isVisiblePassword, setIsVisiblePassword] = useState(false);
 
   const navigation = useNavigation();
 
+  const keyboardHide = () => {
+    setIsShowKeyboard(false);
+    Keyboard.dismiss();
+  };
+
   const onSubmit = () => {
     console.log(`email: ${email}, password: ${password}`);
     setEmail('');
     setPassword('');
-    Keyboard.dismiss();
+    keyboardHide();
     navigation.navigate("Home", {email: email, password: password});
   }
   
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <TouchableWithoutFeedback onPress={keyboardHide}>
 
       <View style={styles.container}>
         {/* background */}
@@ -44,16 +50,15 @@ export default function LoginScreen() {
         >
         
           <View style={styles.wrapper}>
-                    
-            <KeyboardAvoidingView
-              behavior={Platform.OS == "ios" ? "padding" : "height"}
-            >
 
-              <View>
-                <Text style={styles.formTitle}>Увійти</Text>
-              </View>
-              {/* form */}
-              <View style={styles.form}>
+            <View>
+              <Text style={styles.formTitle}>Увійти</Text>
+            </View>
+            {/* form */}
+            <View style={styles.form}>
+              <KeyboardAvoidingView
+                behavior={Platform.OS == "ios" ? "padding" : 0}
+              >
                 {/* input email */}
                 <View>
                   <TextInput
@@ -64,8 +69,14 @@ export default function LoginScreen() {
                       color: "#212121",
                     }}
                     placeholder="Адреса електронної пошти"
-                    onFocus={() => setIsFocusedEmail(true)}
-                    onBlur={() => setIsFocusedEmail(false)}
+                    onFocus={() => {
+                      setIsFocusedEmail(true);
+                      setIsShowKeyboard(true);
+                    }}
+                    onBlur={() => {
+                      setIsFocusedEmail(false);
+                      setIsShowKeyboard(false);
+                    }}
                     value={email}
                     onChangeText={setEmail}
                   />
@@ -81,8 +92,14 @@ export default function LoginScreen() {
                     }}
                     placeholder='Пароль'
                     secureTextEntry={!isVisiblePassword}
-                    onFocus={() => setIsFocusedPassword(true)}
-                    onBlur={() => setIsFocusedPassword(false)}
+                    onFocus={() => {
+                      setIsFocusedPassword(true);
+                      setIsShowKeyboard(true);
+                    }}
+                    onBlur={() => {
+                      setIsFocusedPassword(false);
+                      setIsShowKeyboard(false);
+                    }}
                     value={password}
                     onChangeText={setPassword}
                   />
@@ -95,28 +112,35 @@ export default function LoginScreen() {
                     <Text style={styles.btnToggleText}>Показати</Text>
                   </TouchableOpacity>
                 </View>
-                {/* btn sign in */}
-                <TouchableOpacity
-                  style={styles.btn}
-                  activeOpacity={0.8}
-                  onPress={onSubmit}
-                >
-                  <Text style={styles.btnTitle}>Увійти</Text>
-                </TouchableOpacity>
-                {/* link */}
-                <TouchableOpacity
-                  style={styles.link}
-                  activeOpacity={0.8}
-                  onPress={() => navigation.navigate("Register")}
-                >
-                  <Text style={styles.linkText}>
-                    Немає акаунту? Зареєструватися
-                  </Text>
-                </TouchableOpacity>
+              </KeyboardAvoidingView>
+              {
+                !isShowKeyboard
+                  ? <View>
+                    {/* btn sign in */}
+                    <TouchableOpacity
+                      style={styles.btn}
+                      activeOpacity={0.8}
+                      onPress={onSubmit}
+                    >
+                      <Text style={styles.btnTitle}>Увійти</Text>
+                    </TouchableOpacity>
+                    {/* link */}
+                    <TouchableOpacity
+                      style={styles.link}
+                      activeOpacity={0.8}
+                      onPress={() => navigation.navigate("Register")}
+                    >
+                      <Text style={styles.linkText}>
+                        Немає акаунту? Зареєструватися
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                  : null
+              }
               
-              </View>
+            </View>
 
-            </KeyboardAvoidingView>
+            
           
           </View>
         
@@ -124,7 +148,7 @@ export default function LoginScreen() {
 
       </View>
 
-    </TouchableWithoutFeedback>  
+    </TouchableWithoutFeedback>
   );
 };
 
